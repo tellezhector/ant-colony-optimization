@@ -6,7 +6,7 @@ aco.settings =
 	"width" 		: 800,
 	"height" 		: 500,
 	"charge" 		: -400,
-	"linkDistance" 	: 60,
+	"linkDistance" 	: 100,
 	"linkColor"		: "#666666"
 }
 
@@ -106,14 +106,20 @@ aco.setPathColor = function(graph, path, color)
 	}
 }
 
+aco.colorPath = function(graph, path, selector)
+{
+	aco.setPathColor(graph, path, "#FF0000");
+	aco.draw(graph, selector);
+}
+
 aco.setLinksColor = function(graph, color)
 {
 	_.each(graph.links, function(l){l.color = color; });
 }
 
-aco.resetLinksColor = function()
+aco.resetLinksColor = function(graph)
 {
-	aco.setLinksColor(aco.settings.linkColor);
+	aco.setLinksColor(graph, aco.settings.linkColor);
 }
 
 aco.randomGraph = function(n, p)
@@ -130,10 +136,24 @@ aco.drawRandomGraph = function(n, p)
 	return graph;
 }
 
+aco.pathLength = function(graph, path)
+{
+	var n = path.length;
+	var value = 0;
+	for(var i = 0; i < n-1; i++)
+	{
+		value = value + graph.adjacency[path[i]][path[i+1]]
+	}
+	
+	return value;
+}
+
 aco.graphFromAdjacency = function (adjacency)
 {
 	var graph = {};
 	graph.adjacency = adjacency;
+	graph.paths = [];
+	graph.pathLengths = [];
 	graph.nodes = [];
 	graph.links = [];
 	var length = adjacency.length;
@@ -144,25 +164,160 @@ aco.graphFromAdjacency = function (adjacency)
 		{
 			group = 1;
 		}
-		if(i == (length-1))
-		{
-			group = 3;
-		}
-		
-		var node = { "name" : i, "group" : group, x : i*50, y : i*50};
+	
+		var node = { "name" : aco.names[i], "group" : group, x : i*50, y : i*50};
 		graph.nodes.push(node); 
 		for (var j = i+1; j < length; j++)
 		{
 			var value = adjacency[i][j];
 			if(value > 0)
 			{
-			    var link = { "source" : i, "target" : j, "value" : aco.randomInt(20), "color" : aco.settings.linkColor};
+			    var link = { "source" : i, "target" : j, "value" : value, "color" : aco.settings.linkColor};
 				graph.links.push(link);
 			}
 		}
 	}
 	
+	graph.trails = aco.initialTrail(adjacency);
 	return graph;
+}
+
+aco.initialTrail = function(adjacency)
+{
+	var n = adjacency.length;
+	trails = [];
+	for(var i = 0; i < n; i++)
+	{
+		trails[i] = aco.zeroRow(n);
+		for(var j = 0; j < n; j++)
+		{
+			if(i == j)
+			{
+				continue;
+			}
+			if(adjacency[i][j] != 0)
+			{
+				trails[i][j] = 1;
+			}
+		}
+	}
+	
+	return trails;
+}
+
+aco.updateTrail = function(graph)
+{
+	if(graph.paths.length == 0)
+	{
+		return;
+	}
+	
+	var n = graph.adjacency.length;
+	for(var i = 0; i < n; i++)
+	{
+		for(var j=i+1; j < n; j++)
+		{
+			graph.trails[i][j] = (0.75) * graph.trails[i][j] + aco.getDeltaTau(graph, i, j);
+			graph.trails[j][i] = graph.trails[i][j];
+		}
+	}
+	
+	graph.paths = [];
+	graph.pathLengths = [];
+}
+
+aco.getDeltaTau = function(graph, i, j)
+{
+	var n = graph.paths.length;
+	var value = 0;
+	for(var k = 0; k < n; k++)
+	{
+		var path = graph.paths[k];
+		for(var l = 0; l < (path.length - 1); l++)
+		{
+			if(path[l] == i && path[l+1] == j)
+			{
+				value = value + 1/graph.pathLengths[k];
+				break;
+			}
+
+			if(path[l] == j && path[l+1] == i)
+			{
+				value = value + 1/graph.pathLengths[k];
+				break;
+			}
+		}
+	}
+	
+	return value;
+}
+
+aco.getPath = function(graph)
+{
+	var n = graph.adjacency.length;
+	path = [0];
+	for (var i = 1; i < n; i++)
+	{
+		path.push(aco.nextNodeInPath(graph, path));
+	}
+	path.push(0);
+	return path;
+}
+
+aco.nextNodeInPath = function(graph, path)
+{
+	var last = _.last(path);
+	var n = graph.adjacency.length;
+	var probabilities = [];
+	var availables = []
+	for (var i = 0; i < n; i++)
+	{
+		if(_.contains(path, i))
+		{
+			continue;
+		}
+		
+		availables.push(i);
+		probabilities.push(graph.trails[last][i] * (1/graph.adjacency[last][i]));
+	}
+	
+	probabilities = aco.updateProbabilities(probabilities);
+	return aco.randomNeighbor(probabilities, availables);
+}
+
+aco.randomNeighbor = function(probabilities, availables)
+{
+	var n = probabilities.length;
+	var random = Math.random();
+	var current = 0;
+	for(var i = 0; i < n; i++)
+	{
+		current = current + probabilities[i];
+		if (random < current)
+		{
+			return availables[i];
+		}
+	}
+	
+	alert("Oh my god.");
+	throw("something nasty has happened.");
+}
+
+aco.updateProbabilities = function(probabilities)
+{
+	var n = probabilities.length;
+	var total = aco.sum(probabilities);
+	for(var i = 0; i < n; i++)
+	{
+		probabilities[i] = probabilities[i]/total;
+	}
+	
+	return probabilities;
+}
+
+aco.sum = function(a)
+{
+	return _.reduce(a, function(memo, num){ return memo + num; }, 0);
 }
 
 aco.randomAdjacency = function(n, p)
@@ -180,13 +335,29 @@ aco.randomAdjacency = function(n, p)
 
 		for(var j = i+1; j < n; j++)
 		{
-			adjacency[i][j] = aco.randomZeroOne(p);
+			adjacency[i][j] = aco.randomZeroOne(p) * aco.randomInt(20);
 		}
 		
 		if (_.max(adjacency[i]) == 0)
 		{
 			var oneAt = aco.randomInt(n - i - 1) + i;
-			adjacency[i][oneAt] = 1;
+			adjacency[i][oneAt] = aco.randomInt(20);
+		}
+	}
+	
+	adjacency = aco.adjacencyReverse(adjacency);
+	
+	return adjacency;
+}
+
+aco.adjacencyReverse = function(adjacency)
+{
+	var n = adjacency.length;
+	for(var i = 0; i < n; i++)
+	{
+		for(var j = i+1; j < n; j++)
+		{
+			adjacency[j][i] = adjacency[i][j]; 
 		}
 	}
 	
