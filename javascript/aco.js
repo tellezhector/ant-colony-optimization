@@ -27,11 +27,10 @@ aco.layout = function()
 		.attr("height", aco.height);
 }
 
-aco.layout(aco.settings);
+aco.layout();
 
 aco.draw = function(graph)
 {
-  aco.graph = graph;
   aco.force
       .nodes(graph.nodes)
       .links(graph.links)
@@ -70,7 +69,7 @@ aco.draw = function(graph)
   });
 }
 
-aco.setPathColor = function(path, color)
+aco.setPathColor = function(graph, path, color)
 {	
 	var min = _.min(path);
 	if(min < 0)
@@ -79,7 +78,7 @@ aco.setPathColor = function(path, color)
 	}
 	
 	var max = _.max(path);
-	if(max > aco.graph.nodes.length - 1)
+	if(max > graph.nodes.length - 1)
 	{
 		throw("Node " + max + " not defined.");
 	}
@@ -89,7 +88,7 @@ aco.setPathColor = function(path, color)
 		var source = path[i];
 		var target = path[i+1];
 		var link = _.find(
-				aco.graph.links, 
+				graph.links, 
 				function(l){
 					var inOrder = (l.source.index == source && l.target.index == target);
 					var reverse = (l.source.index == target && l.target.index == source);
@@ -107,9 +106,9 @@ aco.setPathColor = function(path, color)
 	}
 }
 
-aco.setLinksColor = function(color)
+aco.setLinksColor = function(graph, color)
 {
-	_.each(aco.graph.links, function(l){l.color = color; });
+	_.each(graph.links, function(l){l.color = color; });
 }
 
 aco.resetLinksColor = function()
@@ -294,5 +293,5 @@ aco.names =
 ];
 
 var adjacency = aco.randomAdjacency(20, 0.05);
-aco.graph = aco.graphFromAdjacency(adjacency);
-aco.draw(aco.graph);
+graph = aco.graphFromAdjacency(adjacency);
+aco.draw(graph);
