@@ -10,7 +10,7 @@ aco.settings =
 	"linkColor"		: "#666666"
 }
 
-aco.layout = function(selector)
+aco.layout = function()
 {
 	
 	aco.width = aco.settings.width;
@@ -21,26 +21,13 @@ aco.layout = function(selector)
 		.linkDistance(aco.settings.linkDistance)
 		.size([aco.width, aco.height]);
 
-	aco.svg = d3.select(selector)
+	aco.svg = d3.select("body")
 		.append("svg")
 		.attr("width", aco.width)
 		.attr("height", aco.height);
 }
 
-aco.drawOn = function(selector, graph)
-{
-	aco.layout(selector);
-	aco.draw(graph);
-}
-
-aco.drawNewOn = function(selector)
-{
-	var adjacency = aco.randomAdjacency(20, 0.1);
-	graph = aco.graphFromAdjacency(adjacency);
-	aco.redraw(graph);
-}
-
-aco.layout("body");
+aco.layout(aco.settings);
 
 aco.draw = function(graph)
 {
@@ -306,3 +293,6 @@ aco.names =
 "Mme.Hucheloup"
 ];
 
+var adjacency = aco.randomAdjacency(20, 0.05);
+aco.graph = aco.graphFromAdjacency(adjacency);
+aco.draw(aco.graph);
