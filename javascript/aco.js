@@ -10,9 +10,8 @@ aco.settings =
 	"linkColor"		: "#666666"
 }
 
-aco.layout = function()
-{
-	
+aco.layout = function(selector)
+{	
 	aco.width = aco.settings.width;
 	aco.height = aco.settings.height;
 
@@ -21,16 +20,18 @@ aco.layout = function()
 		.linkDistance(aco.settings.linkDistance)
 		.size([aco.width, aco.height]);
 
-	aco.svg = d3.select("body")
+	aco.svg = d3.select(selector)
 		.append("svg")
 		.attr("width", aco.width)
 		.attr("height", aco.height);
 }
 
-aco.layout();
-
-aco.draw = function(graph)
+aco.draw = function(graph, selector)
 {
+  var newselector = selector + " svg";
+  console.log(newselector);
+  d3.select(newselector).remove();
+  aco.layout(selector);
   aco.force
       .nodes(graph.nodes)
       .links(graph.links)
@@ -114,13 +115,6 @@ aco.setLinksColor = function(graph, color)
 aco.resetLinksColor = function()
 {
 	aco.setLinksColor(aco.settings.linkColor);
-}
-
-aco.redraw = function(graph, settings)
-{
-	aco.svg.remove();
-	aco.layout(settings);
-	aco.draw(graph);
 }
 
 aco.randomGraph = function(n, p)
@@ -294,4 +288,4 @@ aco.names =
 
 var adjacency = aco.randomAdjacency(20, 0.05);
 graph = aco.graphFromAdjacency(adjacency);
-aco.draw(graph);
+aco.draw(graph, "body");
