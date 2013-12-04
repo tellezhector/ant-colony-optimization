@@ -3,10 +3,10 @@ aco.color = d3.scale.category20();
 
 aco.settings = 
 {
-	"width" 		: 1000,
-	"height" 		: 700,
+	"width" 		: 800,
+	"height" 		: 500,
 	"charge" 		: -400,
-	"linkDistance" 	: 30,
+	"linkDistance" 	: 60,
 	"linkColor"		: "#666666"
 }
 
@@ -29,7 +29,6 @@ aco.layout = function(selector)
 aco.draw = function(graph, selector)
 {
   var newselector = selector + " svg";
-  console.log(newselector);
   d3.select(newselector).remove();
   aco.layout(selector);
   aco.force
@@ -140,14 +139,24 @@ aco.graphFromAdjacency = function (adjacency)
 	var length = adjacency.length;
 	for (var i = 0; i < length; i++)
 	{
-		var node = { "name" : i, "group" : i == 0 ? 1 : 2, x : i*50, y : i*50};
+		var group = 2;
+		if(i == 0)
+		{
+			group = 1;
+		}
+		if(i == (length-1))
+		{
+			group = 3;
+		}
+		
+		var node = { "name" : i, "group" : group, x : i*50, y : i*50};
 		graph.nodes.push(node); 
 		for (var j = i+1; j < length; j++)
 		{
 			var value = adjacency[i][j];
 			if(value > 0)
 			{
-			    var link = { "source" : i, "target" : j, "value" : value, "color" : aco.settings.linkColor};
+			    var link = { "source" : i, "target" : j, "value" : aco.randomInt(20), "color" : aco.settings.linkColor};
 				graph.links.push(link);
 			}
 		}
@@ -285,7 +294,3 @@ aco.names =
 "Brujon",
 "Mme.Hucheloup"
 ];
-
-var adjacency = aco.randomAdjacency(20, 0.05);
-graph = aco.graphFromAdjacency(adjacency);
-aco.draw(graph, "body");

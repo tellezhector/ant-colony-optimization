@@ -26,6 +26,7 @@
   <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="slides/theme/css/phone.css">
   <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
   <script data-main="slides/js/slides" src="Slides/js/require-1.0.8.min.js"></script>
+  <script type="text/javascript" src="Mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </head>
 <body style="opacity: 0">
 	<script src="javascript/underscore-min.js"></script>
@@ -33,6 +34,7 @@
 	<script src="javascript/d3.v3.min.js"></script>
 	<script src="javascript/aco.js"></script>
 	<script src="javascript/jquery.min.js"></script>
+	<script src="javascript/presentation.js"></script>
 <slides class="layout-widescreen">
 
   <slide class="logoslide nobackground">
@@ -57,8 +59,7 @@
     </hgroup>
 	<br>
 	  Un conjunto de algoritmos inspirados en hormigas para resolver problemas computacionalmente caros.
-	  <button>Click!</button>
-	<div id="canvas1"></div>		  
+	  <button id="button_s3" onclick="presentation.button_slide_3(this)">Click!</button>		  
   </slide>
   
   <slide>
@@ -69,7 +70,7 @@
 	
 	<article class="flexbox vcenter">    
 	Las hormigas son eficientes encontrando fuentes de comida. Su gracia es que no necesitan conocer el
-	mapa de su territorio para eventualmente encontrar rutas eficientes.
+	mapa de su territorio para eventualmente encontrar rutas eficientes. Es más, son ciegas.
 	<br><br>
       <img src="images/ants_transporting_leaves.jpg" class="reflect" alt="Description" title="Description" height="60%">
     </article>
@@ -81,11 +82,230 @@
       <h2>¿Cómo lo logran?</h2>
     </hgroup>
 	<article class="flexbox vcenter">    
-	Esencialmente, cada hormiga, mientras camina, deja un ratro de feromonas. 
+	Esencialmente, cada hormiga, mientras camina, deja un rastro de feromonas. Y eso basta para hacer el truco. 
 	<br><br>
       <img src="images/ant-trail.jpg" class="reflect" alt="Description" title="Description" height="80%">
     </article>
 	<br>
+  </slide>
+
+  <slide>
+	<hgroup>
+      <h2>"Algoritmo"</h2>
+    </hgroup>
+	<article class="flexbox vcenter">
+		<ul class="build fade">
+			<li>Una hormiga sigue un camino con más probabilidad dependiendo de la cantidad de feromonoas en él (también puede explorar nuevas rutas).</li>
+			<li>Si una hormiga se cansa de buscar y no encuentra comida, regresa a la colonia sin volver a dejar rastro de feromonoas.</li>
+			<li>Si encuentra comida, regresa a la colonia haciendo más fuerte el rastro de feromonas.</li>
+		</ul>
+	</article>
+	<br>
+  </slide>
+  
+  <slide>
+	<hgroup>
+		<h2>Problemas de este algoritmo</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		<ul class="build">
+			<li>Se encuentran pocas cosas a la vez.</li>
+			<li>Si el mapa se altera (aparezcan mejores o peores rutas), es improbable que las hormigas readapten sus rutas.</li>
+		</ul>
+	</article>	
+  </slide>
+  
+  <slide>
+	<hgroup>
+		<h2>¿Se puede mejorar?</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		Sí, pero no deja de ser heurístico.
+		<br><br>
+		Un método heurístico no requiere de una demostración, ni de rigurozidad matemática.
+		Pero para problemas difíciles, en la práctica se prefiere tener un método heurístico que de resultados a uno
+		que podría tardar años en obtener una respuesta óptima.
+	</article>		
+  </slide>
+
+  <slide>
+	<hgroup>
+		<h2>Ejemplo</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		Suponga que tiene una gráfica con \(20\) nodos, la gráfica es completa, las aristas tienen pesos y usted quiere encontrar una ruta óptima entre
+		dos nodos que pase por todos los demás. (Ha eso se le llama camino hamiltoniano de peso mínimo).
+		<br><br>
+		
+		La gráfica es completa, así que usted tiene \(18!\) rutas posibles entre dos nodos fijos.
+		<br><br>
+		
+		$$18! = 6402373705728000$$
+		<br>
+		Aún con poder de cómputo suficiente para evaluar y comparar el peso de \(1,000,000\) rutas por segundo, usted necesitaría de
+		aproximadamente \(6402373705\) segundos. Es decir, poco más de \(203\) años para poder decir que ha encontrado el óptimo.
+	</article>		
+  </slide>
+
+  <slide>
+	<hgroup>
+		<h2>Gráfica completa de 20 vértices</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		<button onclick="presentation.button_slide_10(this)"> click! </button>
+	</article>		
+  </slide>
+
+  <slide>
+	<hgroup>
+		Historia al respecto
+	</hgroup>
+	<article class="flexbox vcenter">
+		<ul class="build">
+			<li>
+				El primer método basado en el comportamiento de las hormigas se llamá \(Ant\;System\) y fue desarrollado por \(Marco\;Dorigo\) (italiano) en su
+				tesis de doctorado en 1992. (más o menos reciente).
+			</li>
+			<li>
+				\(Max-Min\;Ant\;System\) (primera variación en la que las hormigas pueden decidir cuantas feromonas dejar) fue desarroyado por \(Hoos\) y \(Stützle\)
+				en 1996.
+			</li>
+			<li>
+				\(Ant\;Colony\;System\) (las hormigas se adaptan a cambios en el mapa, de este se trata la presentación) fue desarrollado por \(Gambardella\;Dorigo\) en 1997.
+			</li>
+		</ul>
+	</article>		
+  </slide>
+  
+  <slide>
+	<hgroup>
+		<h2>Como funciona (fue bonito tener su atención)</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		Una hormiga se mueve de un nodo \(i\) a un nodo \(j\) con probabilidad
+			$$p_{i,j} = \frac{(\tau_{i,j}^{\alpha})(\eta_{i,j}^{\beta})}{\sum_{i,k}(\tau_{k,j}^{\alpha})(\eta_{k,j}^{\beta})}$$
+			<br>
+			<ul class="build fade">
+				<li>\(\tau_{i,j}\) es la cantidad de feromona en la arista \((i,j)\).</li>
+				<li>\(\alpha\) es un parametro de control de influencia de \(\tau_{i,j}\).</li>
+				<li>\(\eta_{i,j}\) es que tan deseable es la arista \((i,j)\). Digamos que entre más pesada, menos deseable (este es el criterio utilizado tipicamente).</li>
+				<li>\(\beta\) es una parametro de control de influencia de \(\eta_{i,j}\).</li>
+			</ul>
+	</article>		
+  </slide>
+  
+  <slide>
+	<hgroup>
+		<h2>Como funciona</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		La cantidad de feromona en una arista se actualiza de acuerdo a la ecuación
+		$$\tau_{i,j} = (1-\rho) \tau_{i,j} + \Delta\tau_{i,j}$$
+		<br>
+			<ul class="build fade">
+				<li>\(\tau_{i,j}\) es la cantidad de feromona en la arista \((i,j)\).</li>
+				<li>\(\rho\) el radio de evaoporación de la feromona. (Así es como los caminos menos usados se vuelven menos deseados).</li>
+				<li>\(\Delta\tau_{i,j}\) es la cantidad de feromona depositada. (A continuación les cuento).</li>
+			</ul>
+	</article>		
+  </slide>
+
+  <slide>
+	<hgroup>
+		<h2>Como funciona</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		\(L_k\) es un parámetro que mide que tan bien le fue a la \(k\)-ésima hormiga en su recorrido. Típicamente, es el peso del camino que
+		escogió.
+		<br><br>
+		Entonces se define \(\Delta\tau_{i,j}^k\) como \(1/L_k\) si la \(k\)-ésima hormiga camina por la arista \(i,j\), y como \(0\) en caso contrario.
+		<br><br>
+	    \(\Delta\tau_{i,j}\) es la suma de todas estas.
+		<br><br>
+	</article>		
+  </slide>
+  
+  <slide>
+	<hgroup>
+		<h2>Otras interpretaciones</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		Lo que acabo de mostrarles es la aplicación típica de un sistema de colonias de hormigas. Pero existen otras maneras que se han explorado. 
+		(A esta forma en particular, le ha ido bien).
+		<br><br>
+		<ul class="build fade">
+			<li>Se han hecho métodos en los que cada hormiga que completa el recorrido actualiza los valores de feromona. 
+			(En nuestro caso mandamos un montoncito y cuando terminan, actualizamos).</li>
+			<li>En los que cada hormiga, a cada paso, actualiza el rastro.</li>
+			<li>Los le dan más chance a explorar nuevos caminos o caminos olvidados tirando dos volados en vez de uno.</li>
+			<li>Hay los que eligen una cantidad de feromona a aumentar muy particular. (La mejor que ha funcionado hasta el momento por ejemplo).</li>
+		</ul>
+	</article>		
+  </slide>
+  
+  <slide>
+	<hgroup>
+		<h2>Metaheurística</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		Las variacions son tantas, que más bien se le concidera una "metaheurística". Es decir, las soluciones que ofrece pueden
+		ser muchas (a diferencia de otros algoritmos, como greedy, por ejemplo), y puede adaptarse a un problema en particular 
+		cambiando los criterios de discriminación y promoción de aristas (o rutas completas).
+	</article>		
+  </slide>
+  
+  <slide>
+	<hgroup>
+		<h2>Aplicaciones</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		<ul class="build fade">
+			<li>Ruteo en redes de telecomunicaciones.</li>
+			<li>Problema del agente viajero.</li>
+			<li>Coloración de gráficas.</li>
+			<li>Agendamiento (¿Es agendamiento una palabra?) Pueden llamarle también "el problema de los horarios".</li>
+			<li>Tráfico en redes.</li>
+			<li>Cubiertas de conjuntos.</li>
+			<li>Clique máximo.</li>
+			<li>Redes bayesianas.</li>
+		</ul>
+	</article>		
+  </slide>
+  
+  <slide>
+	<hgroup>
+		<h2>Cosas buenas</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		<ul class="build fade">
+			<li>Paralelismo (funciona bien con cómputo paralelo, es decir, muchas computadoras resolviendo el mismo problema al mismo tiempo).</li>
+			<li>Encuentra soluciones buenas (no necesariamente óptimas) rápidamente.</li>
+			<li>¡Le va muy bien con el problema del agente viajero!</li>
+			<li>Se adapta a cambios en el mapa.</li>
+		</ul>
+	</article>		
+  </slide>
+  
+  <slide>
+	<hgroup>
+		<h2>Cosas malas</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		<ul class="build fade">
+			<li>El análisis teórico es muy complicado.</li>
+			<li>Las distribuciones cambian en cada iteración. (Más dificultad al análisis teórico)</li>
+			<li>No hay independencia en las decisiones tomadas. (Bastante más dificultad al análisis teórico)</li>
+			<li>Todo esto implica que la investigación tiene que ser más bien experimental.</li>
+			<li>El tiempo de convergencia es incierto. (Aunque está garantizado que convergerá, algún día).</li>
+		</ul>
+	</article>		
+  </slide>
+  
+  <slide>
+	<hgroup>
+	</hgroup>
+	<article class="flexbox vcenter">
+	</article>		
   </slide>
   
   <slide class="logoslide dark nobackground">
