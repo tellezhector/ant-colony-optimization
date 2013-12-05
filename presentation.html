@@ -130,11 +130,11 @@
 
   <slide>
 	<hgroup>
-		<h2>Ejemplo</h2>
+		<h2>Ejemplo (Por qué la fuerza bruta no es opción)</h2>
 	</hgroup>
 	<article class="flexbox vcenter">
 		Suponga que tiene una gráfica con \(20\) nodos, la gráfica es completa, las aristas tienen pesos y usted quiere encontrar una ruta óptima entre
-		dos nodos que pase por todos los demás. (Ha eso se le llama camino hamiltoniano de peso mínimo).
+		dos nodos que pase por todos los demás. (A eso se le llama camino hamiltoniano de peso mínimo).
 		<br><br>
 		
 		La gráfica es completa, así que usted tiene \(18!\) rutas posibles entre dos nodos fijos.
@@ -158,7 +158,7 @@
 
   <slide>
 	<hgroup>
-		Historia al respecto
+		<h2>Historia al respecto</h2>
 	</hgroup>
 	<article class="flexbox vcenter">
 		<ul class="build">
@@ -183,7 +183,7 @@
 	</hgroup>
 	<article class="flexbox vcenter">
 		Una hormiga se mueve de un nodo \(i\) a un nodo \(j\) con probabilidad
-			$$p_{i,j} = \frac{(\tau_{i,j}^{\alpha})(\eta_{i,j}^{\beta})}{\sum_{i,k}(\tau_{k,j}^{\alpha})(\eta_{k,j}^{\beta})}$$
+			$$p_{i,j} = \frac{(\tau_{i,j}^{\alpha})(\eta_{i,j}^{\beta})}{\sum_{i,k}(\tau_{i,k}^{\alpha})(\eta_{i,k}^{\beta})}$$
 			<br>
 			<ul class="build fade">
 				<li>\(\tau_{i,j}\) es la cantidad de feromona en la arista \((i,j)\).</li>
@@ -244,7 +244,7 @@
 			<li>Se han hecho métodos en los que cada hormiga que completa el recorrido actualiza los valores de feromona. 
 			(En nuestro caso mandamos un montoncito y cuando terminan, actualizamos).</li>
 			<li>En los que cada hormiga, a cada paso, actualiza el rastro.</li>
-			<li>Los le dan más chance a explorar nuevos caminos o caminos olvidados tirando dos volados en vez de uno.</li>
+			<li>Los que le dan más chance a explorar nuevos caminos o caminos olvidados tirando dos volados en vez de uno.</li>
 			<li>Hay los que eligen una cantidad de feromona a aumentar muy particular. (La mejor que ha funcionado hasta el momento por ejemplo).</li>
 		</ul>
 	</article>		
@@ -255,7 +255,7 @@
 		<h2>Metaheurística</h2>
 	</hgroup>
 	<article class="flexbox vcenter">
-		Las variacions son tantas, que más bien se le concidera una "metaheurística". Es decir, las soluciones que ofrece pueden
+		Las variacions son tantas, que más bien se trata de una "metaheurística". Es decir, las soluciones que ofrece pueden
 		ser muchas (a diferencia de otros algoritmos, como greedy, por ejemplo), y puede adaptarse a un problema en particular 
 		cambiando los criterios de discriminación y promoción de aristas (o rutas completas).
 	</article>		
@@ -267,10 +267,10 @@
 	</hgroup>
 	<article class="flexbox vcenter">
 		<ul class="build fade">
-			<li>Ruteo en redes de telecomunicaciones.</li>
+			<li>Enrutamiento en redes de telecomunicaciones.</li>
 			<li>Problema del agente viajero.</li>
 			<li>Coloración de gráficas.</li>
-			<li>Agendamiento (¿Es agendamiento una palabra?) Pueden llamarle también "el problema de los horarios".</li>
+			<li>"Calendarización" (el problema de los horarios).</li>
 			<li>Tráfico en redes.</li>
 			<li>Cubiertas de conjuntos.</li>
 			<li>Clique máximo.</li>

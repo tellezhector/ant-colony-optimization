@@ -53,8 +53,8 @@ presentation.slide_15_insert_buttons = function(button)
 	}
 	
 	button
-		.after('<button onclick="presentation.train_a_lot()">Train me a lot! (this will take a time)</button>')		
-		.after('<button onclick="presentation.send_a_tousend_ants()">Send a tousend ants</button>')
+		.after('<button onclick="presentation.train_a_lot()">Train me a lot! (this will take a while)</button>')		
+		.after('<button onclick="presentation.send_a_thousend_ants()">Send a thousend ants</button>')
 		.after('<button onclick="presentation.update_trail()">Update trail</button>')	
 		.after('<button onclick="presentation.send_an_ant()">Send an ant</button>')
 		.after('<button onclick="presentation.button_slide_15(this)">Another</button>');
@@ -65,12 +65,12 @@ presentation.train_a_lot = function()
 {
 	for(var i = 0; i < 1000; i++)
 	{
-		presentation.send_a_tousend_ants();
+		presentation.send_a_thousend_ants();
 		presentation.update_trail();
 	}
 }
 
-presentation.send_a_tousend_ants = function()
+presentation.send_a_thousend_ants = function()
 {
 	for(var i=0; i < 1000; i++)
 	{
