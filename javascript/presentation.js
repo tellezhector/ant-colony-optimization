@@ -93,9 +93,18 @@ presentation.update_trail = function()
 {
 	aco.updateTrail(presentation.graph);
 }
-
 presentation.clap = function(button)
 {
 	var button = $(button);
-	button.after('<img src="images/meee.gif" />').after("<br><br>");
+	var bellow = button.next();
+	button.remove();
+	for (var i=0; i < 24; i++)
+	{
+		setTimeout(function(){presentation.addBeaker(bellow)}, i*500);
+	}
+}
+
+presentation.addBeaker = function(bellow)
+{
+	bellow.after('<div style="float: left; width: 25%" ><img src="images/meee.gif" style="width: 100%" class="reflect" alt="Description" title="Description"/></div>');
 }
