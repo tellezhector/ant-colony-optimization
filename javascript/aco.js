@@ -5,8 +5,8 @@ aco.settings =
 {
 	"width" 		: 800,
 	"height" 		: 500,
-	"charge" 		: -400,
-	"linkDistance" 	: 100,
+	"charge" 		: -500,
+	"linkDistance" 	: 200,
 	"linkColor"		: "#666666"
 }
 
@@ -122,9 +122,9 @@ aco.resetLinksColor = function(graph)
 	aco.setLinksColor(graph, aco.settings.linkColor);
 }
 
-aco.randomGraph = function(n, p)
+aco.randomGraph = function(n, p, options)
 {
-	var adjacency = aco.randomAdjacency(n, p);
+	var adjacency = aco.randomAdjacency(n, p, options);
 	var graph = aco.graphFromAdjacency(adjacency);
 	return graph;
 }
@@ -278,7 +278,7 @@ aco.nextNodeInPath = function(graph, path)
 		}
 		
 		availables.push(i);
-		probabilities.push(graph.trails[last][i] * (1/graph.adjacency[last][i]));
+		probabilities.push(graph.trails[last][i] * (1/Math.pow(graph.adjacency[last][i], 2)));
 	}
 	
 	probabilities = aco.updateProbabilities(probabilities);
@@ -320,8 +320,14 @@ aco.sum = function(a)
 	return _.reduce(a, function(memo, num){ return memo + num; }, 0);
 }
 
-aco.randomAdjacency = function(n, p)
+aco.randomAdjacency = function(n, p, options)
 {
+	var maxWeight = 20;
+	if (typeof options !== "undefined")
+	{
+		maxWeight = options.maxWeight;
+	}
+	
 	if (typeof p === "undefined")
 	{
 		p = 0.5;
@@ -335,13 +341,13 @@ aco.randomAdjacency = function(n, p)
 
 		for(var j = i+1; j < n; j++)
 		{
-			adjacency[i][j] = aco.randomZeroOne(p) * aco.randomInt(20);
+			adjacency[i][j] = aco.randomZeroOne(p) * aco.randomInt(maxWeight);
 		}
 		
 		if (_.max(adjacency[i]) == 0)
 		{
 			var oneAt = aco.randomInt(n - i - 1) + i;
-			adjacency[i][oneAt] = aco.randomInt(20);
+			adjacency[i][oneAt] = aco.randomInt(maxWeight);
 		}
 	}
 	
@@ -381,8 +387,13 @@ aco.randomZeroOne = function(p)
 }
 
 aco.randomInt = function(max)
-{
-	return Math.floor(Math.random() * max) + 1;
+{	
+	var r = Math.random();
+	if(r > 0.85)
+	{
+		return max;
+	}
+	return Math.floor(r * max) + 1;
 }
 
 aco.names = 

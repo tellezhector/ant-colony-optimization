@@ -22,11 +22,11 @@
   <!--This one seems to work all the time, but really small on ipad-->
   <!--<meta name="viewport" content="initial-scale=0.4">-->
   <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script type="text/javascript" src="Mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   <link rel="stylesheet" media="all" href="slides/theme/css/default.css">
   <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="slides/theme/css/phone.css">
-  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
-  <script data-main="slides/js/slides" src="Slides/js/require-1.0.8.min.js"></script>
-  <script type="text/javascript" src="Mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </head>
 <body style="opacity: 0">
 	<script src="javascript/underscore-min.js"></script>
@@ -35,6 +35,8 @@
 	<script src="javascript/aco.js"></script>
 	<script src="javascript/jquery.min.js"></script>
 	<script src="javascript/presentation.js"></script>
+	<script data-main="slides/js/slides" src="Slides/js/require-1.0.8.min.js"></script>
+
 <slides class="layout-widescreen">
 
   <slide class="logoslide nobackground">
@@ -55,24 +57,62 @@
 
   <slide>
     <hgroup>
-      <h2>¿Qué es?</h2>
+      <h2>El problema del agente viajero</h2>
     </hgroup>
 	<br>
-	  Un conjunto de algoritmos inspirados en hormigas para resolver problemas computacionalmente caros.
+		El problema del agente viajero es, un agente tiene un mapa de ciudades y distancias entre las ciudades, quiere encontrar
+		una ruta que pase por todas las ciudades (sin repetir) y regrese a la primer ciudad, y quiere que la ruta sea tan corta como sea posible. 
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>El problema del agente viajero</h2>
+    </hgroup>
+	<br>
+		Se trata de un problema NP-completo
+		<br><br>
+		Todos los algoritmos que se han dado para resolver el problema, necesitan de un número de operaciones que crece más rápido que cualquier polinomio.
+		<br><br>
+		Si pueden encontrar un algoritmo tal que el número de operaciones que necesita realizar crezca conforme a un polinomio (o menos), entonces se ganan un millón de dólares.
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>El problema del agente viajero</h2>
+    </hgroup>
+	<br>
+		Los problemas NP-completos son muy caros computacionalmente. Para desfortuna, en la práctica son muy comunes.
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>El problema del agente viajero</h2>
+    </hgroup>
+	<br>
+		El problema del agente viajero puede ser muy bien modelado con una gráfica.
+		<button onclick="presentation.muestra_problema_del_agente_viajero(this)">Click!</button>
+		<button style="display : none" onclick="presentation.colorea_problema_del_agente_viajero(this)">Color!</button>
+		<div id="canvas_traveling_salesman_problem"></div>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Ant Colony Optimization</h2>
+    </hgroup>
+	<br>
+	  Un "conjunto de algoritmos" inspirados en hormigas para resolver problemas computacionalmente caros.
 	  <button id="button_s3" onclick="presentation.button_slide_3(this)">Click!</button>		  
   </slide>
   
-  <slide>
+  <slide class="fill nobackground" style="background-image: url(images/ants_transporting_leaves.jpg)">
 	<hgroup>
-      <h2>¿Qué problema pueden resolver las hormigas?</h2>
+      <h2 class="white">¿Qué problema pueden resolver las hormigas?</h2>
     </hgroup>
 	<br>
 	
-	<article class="flexbox vcenter">    
-	Las hormigas son eficientes encontrando fuentes de comida. Su gracia es que no necesitan conocer el
-	mapa de su territorio para eventualmente encontrar rutas eficientes. Es más, son ciegas.
-	<br><br>
-      <img src="images/ants_transporting_leaves.jpg" class="reflect" alt="Description" title="Description" height="60%">
+	<article class="flexbox vcenter white">    
+		Las hormigas son eficientes encontrando fuentes de comida. Su gracia es que no necesitan conocer el
+		mapa de su territorio para eventualmente encontrar rutas eficientes. Es más, son ciegas.
     </article>
 	<br>
   </slide>
@@ -95,7 +135,7 @@
     </hgroup>
 	<article class="flexbox vcenter">
 		<ul class="build fade">
-			<li>Una hormiga sigue un camino con más probabilidad dependiendo de la cantidad de feromonoas en él (también puede explorar nuevas rutas).</li>
+			<li>Una hormiga sigue un camino con más probabilidad dependiendo de la cantidad de feromonas en él (también puede explorar nuevas rutas).</li>
 			<li>Si una hormiga se cansa de buscar y no encuentra comida, regresa a la colonia sin volver a dejar rastro de feromonoas.</li>
 			<li>Si encuentra comida, regresa a la colonia haciendo más fuerte el rastro de feromonas.</li>
 		</ul>
@@ -105,24 +145,22 @@
   
   <slide>
 	<hgroup>
-		<h2>Problemas de este algoritmo</h2>
+		<h2>¿Encuentran el óptimo?</h2>
 	</hgroup>
 	<article class="flexbox vcenter">
-		<ul class="build">
-			<li>Se encuentran pocas cosas a la vez.</li>
-			<li>Si el mapa se altera (aparezcan mejores o peores rutas), es improbable que las hormigas readapten sus rutas.</li>
-		</ul>
-	</article>	
+		No siempre.
+	</article>		
   </slide>
-  
+
   <slide>
 	<hgroup>
-		<h2>¿Se puede mejorar?</h2>
+		<h2>:(</h2>
 	</hgroup>
 	<article class="flexbox vcenter">
-		Sí, pero no deja de ser heurístico.
+		Se trata de un método heurístico.
 		<br><br>
 		Un método heurístico no requiere de una demostración, ni de rigurozidad matemática.
+		<br><br>
 		Pero para problemas difíciles, en la práctica se prefiere tener un método heurístico que de resultados a uno
 		que podría tardar años en obtener una respuesta óptima.
 	</article>		
@@ -133,17 +171,16 @@
 		<h2>Ejemplo (Por qué la fuerza bruta no es opción)</h2>
 	</hgroup>
 	<article class="flexbox vcenter">
-		Suponga que tiene una gráfica con \(20\) nodos, la gráfica es completa, las aristas tienen pesos y usted quiere encontrar una ruta óptima entre
-		dos nodos que pase por todos los demás. (A eso se le llama camino hamiltoniano de peso mínimo).
+		Suponga que tiene una gráfica con \(20\) nodos, la gráfica es completa, las aristas tienen pesos y usted quiere encontrar la ruta óptima
+		del problema del agente viajero.
 		<br><br>
 		
-		La gráfica es completa, así que usted tiene \(18!\) rutas posibles entre dos nodos fijos.
+		La gráfica es completa, así que usted tiene \(19!\) rutas posibles en total.
 		<br><br>
-		
-		$$18! = 6402373705728000$$
+		$$19! = 121645100408832000$$
 		<br>
 		Aún con poder de cómputo suficiente para evaluar y comparar el peso de \(1,000,000\) rutas por segundo, usted necesitaría de
-		aproximadamente \(6402373705\) segundos. Es decir, poco más de \(203\) años para poder decir que ha encontrado el óptimo.
+		un poco más de \(121645100408\) segundos. Es decir, poco más de \(3857\) años para poder decir que ha encontrado el óptimo.
 	</article>		
   </slide>
 
@@ -163,33 +200,75 @@
 	<article class="flexbox vcenter">
 		<ul class="build">
 			<li>
-				El primer método basado en el comportamiento de las hormigas se llamá \(Ant\;System\) y fue desarrollado por \(Marco\;Dorigo\) (italiano) en su
+				El primer método basado en el comportamiento de las hormigas se llama \(Ant\;System\) y fue desarrollado por \(Marco\;Dorigo\) (italiano) en su
 				tesis de doctorado en 1992. (más o menos reciente).
 			</li>
 			<li>
-				\(Max-Min\;Ant\;System\) (primera variación en la que las hormigas pueden decidir cuantas feromonas dejar) fue desarroyado por \(Hoos\) y \(Stützle\)
+				\(Max-Min\;Ant\;System\) (primera variación en la que las hormigas pueden decidir cuantas feromonas dejar) fue desarrollado por \(Hoos\) y \(Stützle\)
 				en 1996.
 			</li>
 			<li>
-				\(Ant\;Colony\;System\) (las hormigas se adaptan a cambios en el mapa, de este se trata la presentación) fue desarrollado por \(Gambardella\;Dorigo\) en 1997.
+				\(Ant\;Colony\;System\) (las hormigas se adaptan a cambios en el mapa) fue desarrollado por \(Gambardella\;Dorigo\) en 1997.
 			</li>
 		</ul>
 	</article>		
   </slide>
-  
+    
   <slide>
 	<hgroup>
 		<h2>Como funciona (fue bonito tener su atención)</h2>
 	</hgroup>
 	<article class="flexbox vcenter">
 		Una hormiga se mueve de un nodo \(i\) a un nodo \(j\) con probabilidad
-			$$p_{i,j} = \frac{(\tau_{i,j}^{\alpha})(\eta_{i,j}^{\beta})}{\sum_{i,k}(\tau_{i,k}^{\alpha})(\eta_{i,k}^{\beta})}$$
+		$$p_{i,j} = \frac{(Qué\; tanto\; me\; gusta\; esta\; opción)}{(Qué\; tanto\; me\; gustan\; todas\; las\; opciones\; que\; tengo)}$$
+	</article>		
+  </slide>  
+  
+  <slide>
+	<hgroup>
+		<h2>Como funciona</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+			Una hormiga se mueve de un nodo \(i\) a un nodo \(j\) con probabilidad
+	
+			$$p_{i,j} = \frac{\tau_{i,j}}{\sum_{i,k}(\tau_{i,k})}$$
+	
 			<br>
 			<ul class="build fade">
 				<li>\(\tau_{i,j}\) es la cantidad de feromona en la arista \((i,j)\).</li>
-				<li>\(\alpha\) es un parametro de control de influencia de \(\tau_{i,j}\).</li>
-				<li>\(\eta_{i,j}\) es que tan deseable es la arista \((i,j)\). Digamos que entre más pesada, menos deseable (este es el criterio utilizado tipicamente).</li>
-				<li>\(\beta\) es una parametro de control de influencia de \(\eta_{i,j}\).</li>
+			</ul>
+	</article>		
+  </slide>
+
+  <slide>
+	<hgroup>
+		<h2>Como funciona</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+			Una hormiga se mueve de un nodo \(i\) a un nodo \(j\) con probabilidad
+	
+			$$p_{i,j} = \frac{(\tau_{i,j})(\eta_{i,j})}{\sum_{i,k}(\tau_{i,k})(\eta_{i,k})}$$
+	
+			<br>
+			<ul class="build fade">
+				<li>\(\eta_{i,j}\) es qué tan deseable es la arista \((i,j)\). Digamos que entre menos pesada, más deseable.</li>
+			</ul>
+	</article>		
+  </slide>  
+  
+  <slide>
+	<hgroup>
+		<h2>Como funciona</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+			Una hormiga se mueve de un nodo \(i\) a un nodo \(j\) con probabilidad
+	
+			$$p_{i,j} = \frac{(\tau_{i,j}^{\alpha})(\eta_{i,j}^{\beta})}{\sum_{i,k}(\tau_{i,k}^{\alpha})(\eta_{i,k}^{\beta})}$$
+	
+			<br>
+			<ul class="build fade">
+				<li>\(\alpha\) es un parámetro de control de influencia de \(\tau_{i,j}\).</li>
+				<li>\(\beta\) es un parámetro de control de influencia de \(\eta_{i,j}\).</li>			
 			</ul>
 	</article>		
   </slide>
@@ -204,7 +283,7 @@
 		<br>
 			<ul class="build fade">
 				<li>\(\tau_{i,j}\) es la cantidad de feromona en la arista \((i,j)\).</li>
-				<li>\(\rho\) el radio de evaoporación de la feromona. (Así es como los caminos menos usados se vuelven menos deseados).</li>
+				<li>\(\rho\) el radio de evaporación de la feromona. (Así es como los caminos menos usados se vuelven menos deseados).</li>
 				<li>\(\Delta\tau_{i,j}\) es la cantidad de feromona depositada. (A continuación les cuento).</li>
 			</ul>
 	</article>		
@@ -212,16 +291,57 @@
 
   <slide>
 	<hgroup>
-		<h2>Como funciona</h2>
+		<h2>Cómo elegir a \(\Delta\tau_{i,j}\)</h2>
 	</hgroup>
 	<article class="flexbox vcenter">
-		\(L_k\) es un parámetro que mide que tan bien le fue a la \(k\)-ésima hormiga en su recorrido. Típicamente, es el peso del camino que
-		escogió.
+			<div> Queremos depositar feromona de tal manera que las mejores decisioines se vuelvan más populares. </div><br><br><br>
+	    <ul class="build fade">
+			<li> Si una arista fue elegida y al camino en donde fue elegida le fue muy bien, queremos darle mucha feromona.</li>		
+			<li> Si una arista fue elegida y al camino en donde fue elegida no le fue muy bien, queremos darle feromona, pero no tanta.</li>		
+			<li> Si una arista no fue elegida, no queremos darle feromona.</li>		
+		</ul>
+	
+	</article>		
+  </slide>
+
+  <slide>
+	<hgroup>
+		<h2>Cómo elegir a \(\Delta\tau_{i,j}\)</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		En el caso del problema del agente viajero. Lo que nos importa es la longitud del recorrido.
 		<br><br>
-		Entonces se define \(\Delta\tau_{i,j}^k\) como \(1/L_k\) si la \(k\)-ésima hormiga camina por la arista \(i,j\), y como \(0\) en caso contrario.
+		<ul class="build fade">
+			<li>Llamemos \(L_k\) a la longitud del recorrido que hizo la \(k\)-ésima hormiga.</li>
+			<li>Si \(L_k\) es grande, quiere decir que a la hormiga le fue mal.</li>
+			<li>Si \(L_k\) es pequeño, quiere decir que a la hormiga le fue bien.</li>
+		</ul>
+	</article>		
+  </slide>
+  
+  <slide>
+	<hgroup>
+		<h2>Cómo elegir a \(\Delta\tau_{i,j}\)</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		Pensemos en lo inverso.
 		<br><br>
-	    \(\Delta\tau_{i,j}\) es la suma de todas estas.
+		<ul class="build fade">
+			<li>Si \(1/L_k\) es grande, quiere decir que a la hormiga le fue bien.</li>
+			<li>Si \(1/L_k\) es pequeño, quiere decir que a la hormiga le fue mal.</li>
+		</ul>
+	</article>		
+  </slide>
+  
+  <slide>
+	<hgroup>
+		<h2>Cómo elegir a \(\Delta\tau_{i,j}\)</h2>
+	</hgroup>
+	<article class="flexbox vcenter">
+		Definimos \(\Delta\tau_{i,j}^k\) como \(1/L_k\) si la \(k\)-ésima hormiga camina por la arista \(i,j\), y como \(0\) en caso contrario.
 		<br><br>
+	    \(\Delta\tau_{i,j}\) es la suma de todas estas. De esta manera, le agregamos más feromona a las aristas que se portan bien y le agregamos poco (o nada) a las que
+		no se portan tan bien.
 	</article>		
   </slide>
 
@@ -229,7 +349,8 @@
 		<hgroup>
 			Ejemplo. <button onclick="presentation.button_slide_15(this)">Give me a graph baby</button>
 		</hgroup>
-		<div></div>
+		<div id="canvas3"></div>
+		<div id="weight"></div>
 	</slide>
   
   <slide>
@@ -320,18 +441,6 @@
   <slide class="backdrop"></slide>
 
 </slides>
-
-<script>
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount', 'UA-XXXXXXXX-1']);
-_gaq.push(['_trackPageview']);
-
-(function() {
-  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-})();
-</script>
 
 <!--[if IE]>
   <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
